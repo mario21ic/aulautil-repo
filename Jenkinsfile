@@ -11,6 +11,13 @@ pipeline {
     SLACK_MESSAGE = "Job ${env.JOB_NAME} Build ${env.BUILD_NUMBER} URL ${env.BUILD_URL}"
   }
 
+  parameters {
+    string(name: 'SLACK_CHANNEL', defaultValue: '#deploys', description: '')
+    choice(name: 'TYPE', choices: 'aut\ncron\ndata', description: 'Autoscaling, Cron or Data')
+    booleanParam(name: 'LAUNCH_CONFIGURATION', defaultValue: false, description: 'Update aws launch configuration with the new ami')
+  }
+
+
 
     stages {
       stage('Repository') {
@@ -34,6 +41,9 @@ pipeline {
           sh "ls -la micarpeta"
           sh 'echo deploy'
           echo "${env.SLACK_MESSAGE}"
+          echo "${params.SLACK_CHANNEL}"
+          echo "${params.TYPE}"
+          echo "${params.LAUNCH_CONFIGURATION}"
         }
       }
    }
