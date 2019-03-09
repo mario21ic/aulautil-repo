@@ -8,7 +8,7 @@ pipeline {
   
   environment {
     ARTIFACT = "${env.BUILD_NUMBER}.zip"
-    SLACK_MESSAGE = "Job '${env.JOB_NAME}' Build ${env.BUILD_NUMBER} URL ${env.JENKINS_URL}"
+    SLACK_MESSAGE = "Job ${env.JOB_NAME} Build ${env.BUILD_NUMBER} URL ${env.JENKINS_URL}"
   }
 
 
