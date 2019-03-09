@@ -25,13 +25,17 @@ pipeline {
            checkout scm
         }
       }
-      stage('Test & Build') {
+      stage('Test') {
         steps {
           parallel (
             sintaxis: { sh "echo check_syntax" },
             var_dump: { sh "echo grep_var_dump" }
           )
+        }
+      }
 
+      stage('Build') {
+        steps {
           sh "echo ${env.BUILD_NUMBER}"
           sh "echo ${env.WORKSPACE}"
           sh "touch archivo.txt"
