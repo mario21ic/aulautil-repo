@@ -8,7 +8,7 @@ pipeline {
   
   environment {
     ARTIFACT = "${env.BUILD_NUMBER}.zip"
-    SLACK_MESSAGE = "Job ${env.JOB_NAME} Build ${env.BUILD_NUMBER}"
+    SLACK_MESSAGE = "Job ${env.JOB_NAME} Build ${env.BUILD_NUMBER} URL ${env.BUILD_URL}"
   }
 
 
@@ -33,7 +33,7 @@ pipeline {
           sh "ls -la"
           sh "ls -la micarpeta"
           sh 'echo deploy'
-          sh 'echo ${env.SLACK_MESSAGE}'
+          echo "${env.SLACK_MESSAGE}"
         }
       }
    }
