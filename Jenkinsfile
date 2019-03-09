@@ -27,6 +27,11 @@ pipeline {
       }
       stage('Test & Build') {
         steps {
+          parallel (
+            sintaxis: { sh "echo check_syntax" },
+            var_dump: { sh "echo grep_var_dump" }
+          )
+
           sh "echo ${env.BUILD_NUMBER}"
           sh "echo ${env.WORKSPACE}"
           sh "touch archivo.txt"
