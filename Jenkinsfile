@@ -50,6 +50,8 @@ pipeline {
           echo "${params.SLACK_CHANNEL}"
           echo "${params.TYPE}"
           echo "${params.LC}"
+          sh "zip -r ${ARTIFACT} ./"
+          archiveArtifacts artifacts: "${env.ARTIFACT}", onlyIfSuccessful: true
         }
       }
       stage('Deploy') {
@@ -64,8 +66,11 @@ pipeline {
             [$class: 'StringParameterValue', name: 'VPC_ID', value: 'vpc-123'],
             [$class: 'StringParameterValue', name: 'SLACK', value: '#deploys']
           ]
+          sh "rm -f ${ARTIFACT}"
         }
       }
    }
 }
+
+
 
