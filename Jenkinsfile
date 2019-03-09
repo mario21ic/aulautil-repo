@@ -1,5 +1,7 @@
 pipeline {
+
   agent any
+
   options {
     ansiColor('xterm')
     timestamps()
@@ -25,6 +27,7 @@ pipeline {
            checkout scm
         }
       }
+
       stage('Test') {
         steps {
           parallel (
@@ -50,10 +53,10 @@ pipeline {
           echo "${params.SLACK_CHANNEL}"
           echo "${params.TYPE}"
           echo "${params.LC}"
-          sh "zip -r ${ARTIFACT} ./"
-          archiveArtifacts artifacts: "${env.ARTIFACT}", onlyIfSuccessful: true
+          sh "zip -r ${env.ARTIFACT} ./"
         }
       }
+
       stage('Deploy') {
         when {
           expression {
@@ -66,11 +69,32 @@ pipeline {
             [$class: 'StringParameterValue', name: 'VPC_ID', value: 'vpc-123'],
             [$class: 'StringParameterValue', name: 'SLACK', value: '#deploys']
           ]
-          sh "rm -f ${ARTIFACT}"
         }
       }
    }
+
+   post {
+    always {
+      archiveArtifacts artifacts: "${ARTIFACT}", onlyIfSuccessful: true
+      sh "rm -f ${ARTIFACT}"
+      echo "Job has finished"
+    }
+    success {
+      slackSendMessage "good"
+    }
+    failure {
+      slackSendMessage "danger"
+    }
+  }
 }
+
+def slackSendMessage(String color) {
+  slackSend channel: "${params.SLACK_CHANNEL}",
+  color: color,
+  failOnError: true,
+  message: "$SLACK_MESSAGE"
+}
+
 
 
 
